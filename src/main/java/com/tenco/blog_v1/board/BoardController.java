@@ -39,7 +39,9 @@ public class BoardController {
     @GetMapping("/")
     public String index(Model model) {
         System.out.println("234235235");
-        List<Board> boardList = boardNativeRepository.findAll();
+        // List<Board> boardList = boardNativeRepository.findAll();
+
+        List<Board> boardList = boardRepository.findAll();
 
         model.addAttribute("boardList", boardList);
 
