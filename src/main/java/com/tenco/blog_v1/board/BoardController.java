@@ -23,6 +23,50 @@ public class BoardController {
 
     private final HttpSession session;
 
+    // 게시글 수정 요청 기능
+    // board/{id}/update
+    @PostMapping("/board/{id}/update")
+    public String update(@PathVariable(name = "id") Integer id, @ModelAttribute BoardDTO.UpdateDTO reqDTO) {
+        // 1. UpdateDTO
+        // 1. 데이터 바인딩 방식 수정
+
+        // 2. 인증 검사 - 로그인 여부 판단
+        User sessionUser = (User)session.getAttribute("sessionUser");
+
+        if (sessionUser == null) {
+            return "redirect:/login";
+        }
+        // 3. 권한 체크 - 내 글인가?
+        Board board = boardRepository.findById(id);
+        if(board == null) {
+            return "redirect:/error-404";
+        }
+        // 4. 유효성 검사
+        if (! board.getUser().getId().equals(sessionUser.getId())) {
+            return "redirect:/error-403"; // 추후 수정
+        }
+        // 5. 서비스 즉 위임 (구현) - 레파지토리 사용
+        boardRepository.updateByIdJPA(id, reqDTO.getTitle(), reqDTO.getContent());
+
+        // 6. 리다이렉트 처리
+        return "redirect:/board/" + id;
+    }
+
+    // 게시글 수정 화면 요청
+    // board/id/update
+    @GetMapping("/board/{id}/update-form")
+    public String updateForm(@PathVariable(name = "id") Integer id, HttpServletRequest request) {
+        // 1. 게시글 조회
+        Board board = boardNativeRepository.findById(id);
+        // 2. 요청 속성에 조회한 게시글 속성 및 값 추가
+        request.setAttribute("board", board);
+        // 뷰 리졸브 - 템플릿 반환
+        return "board/update-form"; //src/main/resources/templates/board/update-form.mustache
+    }
+
+
+
+
     // 주소설계 http://localhost:8080/board/10/delete (form 활용이기 때문에 delete 선언)
     // form 태그에서는 GET, POST 방식만 지원하기 때문이다.
     @PostMapping("/board/{id}/delete")
@@ -107,26 +151,7 @@ public class BoardController {
     }
 
 
-    // 게시글 수정 화면 요청
-    // board/id/update
-    @GetMapping("/board/{id}/update-form")
-    public String updateForm(@PathVariable(name = "id") Integer id, HttpServletRequest request) {
 
-        Board board = boardNativeRepository.findById(id);
-        request.setAttribute("board", board);
-        return "board/update-form"; //src/main/resources/templates/board/update-form.mustache
-    }
-
-
-    // 게시글 수정 요청 기능
-    // board/{id}/update
-    @PostMapping("/board/{id}/update")
-    public String update(@PathVariable(name = "id") Integer id, @RequestParam(name = "title") String title, @RequestParam(name = "content") String content) {
-
-        boardNativeRepository.updateById(id, title, content);
-
-        return "redirect:/board/" + id;
-    }
 
 
 }

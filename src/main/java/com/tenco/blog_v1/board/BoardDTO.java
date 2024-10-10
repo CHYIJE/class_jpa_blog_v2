@@ -17,5 +17,13 @@ public class BoardDTO {
                     .user(user)
                     .build();
         }
+
+    }
+
+    @Data
+    public static class UpdateDTO {
+        private String username;
+        private String title;
+        private String content;
     }
 }

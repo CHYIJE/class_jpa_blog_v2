@@ -13,8 +13,23 @@ public class UserDTO {
     }
 
     @Data
-    public static class joinDTO {
+    public static class JoinDTO {
         private String username;
+        private String password;
+        private String email;
+
+        // JoinDTO에 User
+        public User toEntity() {
+            return User.builder()
+                    .username(this.username)
+                    .password(this.password)
+                    .email(this.email)
+                    .build();
+        }
+    }
+
+    @Data
+    public static class UpdateDTO {
         private String password;
         private String email;
     }
