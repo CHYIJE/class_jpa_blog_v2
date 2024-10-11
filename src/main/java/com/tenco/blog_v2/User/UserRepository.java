@@ -1,4 +1,4 @@
-package com.tenco.blog_v1.User;
+package com.tenco.blog_v2.User;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
