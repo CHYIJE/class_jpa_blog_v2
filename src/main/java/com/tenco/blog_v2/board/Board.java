@@ -2,15 +2,14 @@ package com.tenco.blog_v2.board;
 
 import com.tenco.blog_v2.User.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "board_tb")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Board {
 

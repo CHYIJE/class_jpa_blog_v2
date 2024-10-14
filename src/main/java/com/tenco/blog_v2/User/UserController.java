@@ -1,9 +1,11 @@
 package com.tenco.blog_v2.User;
 
+import com.tenco.blog_v2.common.errors.Exception500;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,11 @@ public class UserController {
     private final UserRepository userRepository;
     private final HttpSession session;
 
+    /**
+     * 사용자 정보 수정
+     * @param reqDTO
+     * @return 메인 페이지
+     */
     @PostMapping("/user/update")
     public String update(@ModelAttribute (name = "updateDTO") UserDTO.UpdateDTO reqDTO) {
         // 세션에서 로그인한 사용자 정보 가져오기
@@ -45,7 +52,13 @@ public class UserController {
     @PostMapping("/join")
     public String join(@ModelAttribute(name = "joinDTO") UserDTO.JoinDTO reqDTO) {
 
-        userRepository.save(reqDTO.toEntity());
+        try {
+            userRepository.save(reqDTO.toEntity());
+
+        } catch (DataIntegrityViolationException e) {
+            throw new Exception500("잘못된 연산 입니다.");
+        }
+
 
         return "redirect:/user/login-form";
     }
