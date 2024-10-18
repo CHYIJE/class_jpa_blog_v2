@@ -20,8 +20,8 @@ public class WepConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(loginIntercepter)
-                .addPathPatterns("/protectied/**") // 인터셉터를 적용할 경로 패턴 설정
-                .excludePathPatterns("/pubic/**", "/login", "/logout"); // 인터셉터를 제외할 결로 패턴 설정
+                .addPathPatterns("/board/**", "/user/**", "/reply/**") // 인터셉터를 적용할 경로 패턴 설정
+                .excludePathPatterns("/board/{id:\\d+}"); // 인터셉터를 제외할 결로 패턴 설정
     }
 
 

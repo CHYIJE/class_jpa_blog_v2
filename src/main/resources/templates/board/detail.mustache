@@ -4,14 +4,14 @@
 
     <!-- 수정, 삭제버튼 -->
 
-{{# isOwner}}
-    <div class="d-flex justify-content-end">
-        <a href="/board/{{board.id}}/update-form" class="btn btn-warning me-1">수정</a>
-        <form action="/board/{{board.id}}/delete" method="post">
-            <button class="btn btn-danger">삭제</button>
-        </form>
-    </div>
-{{/isOwner}}
+    {{# isOwner}}
+        <div class="d-flex justify-content-end">
+            <a href="/board/{{board.id}}/update-form" class="btn btn-warning me-1">수정</a>
+            <form action="/board/{{board.id}}/delete" method="post">
+                <button class="btn btn-danger">삭제</button>
+            </form>
+        </div>
+    {{/isOwner}}
 
     <div class="d-flex justify-content-end">
         <b>작성자</b> : {{board.user.username}}
@@ -32,6 +32,7 @@
         <div class="card-body">
             <form action="/reply/save" method="post">
                 <textarea class="form-control" rows="2" name="comment"></textarea>
+                <input type="hidden" name="boardId" value="{{board.id}}">
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-outline-primary mt-1">댓글등록</button>
                 </div>
@@ -43,26 +44,21 @@
             <b>댓글리스트</b>
         </div>
         <div class="list-group">
-            <!-- 댓글아이템 -->
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="d-flex">
-                    <div class="px-1 me-1 bg-primary text-white rounded">cos</div>
-                    <div>댓글 내용입니다</div>
+            {{#board.replies}}
+                <!-- 댓글아이템 -->
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <div class="px-1 me-1 bg-primary text-white rounded">{{user.username}}</div>
+                        <div>{{comment}}</div>
+                    </div>
+                    {{#replyOwner}}
+                    <form action="/reply/1/delete" method="post">
+                        <button class="btn">🗑</button>
+                    </form>
+                    {{/replyOwner}}
+
                 </div>
-                <form action="/reply/1/delete" method="post">
-                    <button class="btn">🗑</button>
-                </form>
-            </div>
-            <!-- 댓글아이템 -->
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="d-flex">
-                    <div class="px-1 me-1 bg-primary text-white rounded">ssar</div>
-                    <div>댓글 내용입니다</div>
-                </div>
-                <form action="/reply/1/delete" method="post">
-                    <button class="btn">🗑</button>
-                </form>
-            </div>
+            {{/board.replies}}
         </div>
     </div>
 </div>
